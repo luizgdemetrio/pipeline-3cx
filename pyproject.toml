@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "pipeline-3cx"
 version = "0.1.0"
-description = ""
+description = "Projeto de pipeline de dados para alimentar power bi com informaçẽos gerencias do produto recupera360"
 authors = ["Luiz <lgds.demtrio@gmail.com>"]
 readme = "README.md"
 
