@@ -1,0 +1,45 @@
+from selenium import webdriver
+from webdriver_manager.firefox import GeckoDriverManager
+from selenium.webdriver.firefox.service import Service as FirefoxService
+from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.options import Options
+from dotenv import load_dotenv
+import time
+import os
+
+load_dotenv()
+report_login_url = os.getenv('REPORT_LOGIN_URL')
+login_ramal = os.getenv('LOGIN_RAMAL')
+password_ramal = os.getenv('PASSWORD_RAMAL')
+office_dashboard = os.getenv('OFFICE_DASHBOARD')
+
+# Configurações do Firefox
+options = Options()
+options.headless = True  # Executar o navegador em modo headless (sem interface gráfica), opcional
+options.set_preference('browser.download.dir', os.path.join(os.getcwd(), 'data'))  # Diretório de download
+options.set_preference('browser.download.folderList', 2)  # Usar diretório personalizado
+options.set_preference('browser.download.useDownloadDir', True)
+options.set_preference('browser.helperApps.neverAsk.saveToDisk', 'application/csv, application/octet-stream')  # Tipo de arquivo permitido para download
+
+# Inicializa o WebDriver com o GeckoDriver (Firefox) via WebDriver Manager
+driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=options)
+
+# Exemplo de navegação
+driver.get(report_login_url)
+
+# Código para interagir com a página
+element = driver.find_element(By.ID, 'loginInput').send_keys(login_ramal)
+element = driver.find_element(By.ID, 'passwordInput').send_keys(password_ramal)
+time.sleep(10)
+element = driver.find_element(By.ID, 'submitBtn').click()
+
+driver.get(office_dashboard)
+time.sleep(5)
+element = driver.find_element(By.XPATH, "//a[@routerlink='/office/reports']").click()
+time.sleep(10)
+element = driver.find_element(By.XPATH, "//a[@data-qa='call-reports-link']").click()
+time.sleep(10)
+element = driver.find_element(By.XPATH, "//button[@class='btn btn-primary']").click()
+
+# Fecha o WebDriver
+driver.quit()
