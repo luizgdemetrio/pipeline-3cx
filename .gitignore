@@ -11,7 +11,7 @@ __pycache__/
 *.so
 
 # Distribution / packaging
-data\call_reports.csv
+data/call_reports.csv
 .Python
 build/
 develop-eggs/
