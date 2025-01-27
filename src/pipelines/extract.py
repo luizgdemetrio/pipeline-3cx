@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 import time
 import os
 
+
 load_dotenv()
 report_login_url = os.getenv("REPORT_LOGIN_URL")
 login_ramal = os.getenv("LOGIN_RAMAL")
@@ -54,6 +55,7 @@ else:
     print("Relatório não encontrado")
 
 # Código para extrair relatório
+time.sleep(15)
 driver.get(report_calls)
 element = WebDriverWait(
     driver,
@@ -74,7 +76,7 @@ while not os.path.exists("data/call_reports.csv") and tempo_esperado < tempo_lim
     print(f"Aguarde: {tempo_esperado}s")
 if os.path.exists("data/call_reports.csv"):
     print(
-        f"Relatório extraido com sucesso, salvo em: {os.path.join(os.getcwd(), 'data/call_reports.csv')}"
+        f"Relatório extraído com sucesso, salvo em: {os.path.join(os.getcwd(), 'data/call_reports.csv')}"
     )
     driver.quit()
     True
