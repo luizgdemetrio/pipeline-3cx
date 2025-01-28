@@ -1,0 +1,53 @@
+import pandas as pd
+import re
+import numpy as np
+import os
+import json
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+def salvar():
+    caminho = "../../data/dataframe.xlsx"
+    df.to_excel(caminho, index=False)
+    print(f"dataframe salvo em: {caminho}")
+
+
+def criar_coluna_decimal(df, coluna_nova, coluna_antiga):
+    df[coluna_nova] = pd.to_timedelta(df[coluna_antiga])
+    df[coluna_nova] = df[coluna_nova].dt.total_seconds() / (3600 * 24)
+    return df
+
+
+recent_call_report = r"../../data/call_reports.csv"  # Arquivo de chamadas recentes
+aux_path = r"../../data/assist.xlsx"  # Arquivo auxiliar para transformação
+
+df = pd.read_csv(recent_call_report)
+aux_df = pd.read_excel(aux_path)
+aux_df = aux_df[["Ramal", "Função"]]
+
+df.drop(["Sentiment", "Summary", "Transcription", "Cost"], axis=1, inplace=True)
+df["Call Time"] = pd.to_datetime(df["Call Time"])
+df_sort = df.sort_values(by="Call Time", ascending=True, inplace=True)
+df["Ramal"] = df["Caller ID"].str.extract(r"\((\d{3})\)$")
+df["Ramal"] = df["Ramal"].astype(str)
+aux_df["Ramal"] = aux_df["Ramal"].astype(str)
+df_result = df.merge(aux_df, on="Ramal", how="left")
+df = df_result
+df["Função"] = df["Função"].fillna("Cliente")
+df["Call Type"] = df["Função"].apply(
+    lambda x: (
+        "Ativa" if x == "Operador" else "Receptiva" if x == "Cliente" else "Indefinido"
+    )
+)
+df.drop(["Função", "Ramal"], axis=1, inplace=True)
+df = criar_coluna_decimal(df, "Ringing int", "Ringing")
+df = criar_coluna_decimal(df, "Talking int", "Talking")
+df["Ramal"] = df["Destination"].str.extract(r"\((\d{3})\)$")
+df["Ramal"] = df["Ramal"].astype(str)
+aux_df["Ramal"] = aux_df["Ramal"].astype(str)
+df_result = df.merge(aux_df, on="Ramal", how="left")
+df = df_result
+
+# df.to_excel("../../data/dataframe.xlsx", index=False)
