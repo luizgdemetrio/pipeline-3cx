@@ -1,8 +1,4 @@
 import pandas as pd
-import re
-import numpy as np
-import os
-import json
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -44,10 +40,11 @@ df["Call Type"] = df["Função"].apply(
 df.drop(["Função", "Ramal"], axis=1, inplace=True)
 df = criar_coluna_decimal(df, "Ringing int", "Ringing")
 df = criar_coluna_decimal(df, "Talking int", "Talking")
-df["Ramal"] = df["Destination"].str.extract(r"\((\d{3})\)$")
-df["Ramal"] = df["Ramal"].astype(str)
-aux_df["Ramal"] = aux_df["Ramal"].astype(str)
-df_result = df.merge(aux_df, on="Ramal", how="left")
-df = df_result
+
+df_ativa = df.loc[df["Call Type"] == "Ativa"].copy()
+df_ativa.to_csv("../../data/ativa.csv", index=False)
+df_receptiva = df.loc[df["Call Type"] == "Receptiva"].copy()
+df_receptiva.to_csv("../../data/receptiva.csv", index=False)
+
 
 # df.to_excel("../../data/dataframe.xlsx", index=False)
