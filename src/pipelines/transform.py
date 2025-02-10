@@ -10,6 +10,12 @@ def salvar():
     print(f"dataframe salvo em: {caminho}")
 
 
+def remover_sinal_negativo(df, coluna1, coluna2):
+    df[coluna1] = df[coluna1].str.replace(r"[^0-9:]", "", regex=True)
+    df[coluna2] = df[coluna2].str.replace(r"[^0-9:]", "", regex=True)
+    return df
+
+
 def criar_coluna_decimal(df, coluna_nova, coluna_antiga):
     df[coluna_nova] = pd.to_timedelta(df[coluna_antiga])
     df[coluna_nova] = df[coluna_nova].dt.total_seconds() / (3600 * 24)
@@ -38,8 +44,10 @@ df["Call Type"] = df["Função"].apply(
     )
 )
 df.drop(["Função", "Ramal"], axis=1, inplace=True)
+df = remover_sinal_negativo(df, "Ringing", "Talking")
 df = criar_coluna_decimal(df, "Ringing int", "Ringing")
 df = criar_coluna_decimal(df, "Talking int", "Talking")
+salvar()
 
 df_ativa = df.loc[df["Call Type"] == "Ativa"].copy()
 df_ativa.to_csv("../../data/ativa.csv", index=False)

@@ -19,5 +19,5 @@ df["Ramal"] = df["Caller ID"].str.extract(r"\((\d{3})\)$")
 df["Ramal"] = df["Ramal"].astype(str)
 aux_df["Ramal"] = aux_df["Ramal"].astype(str)
 df_filtrado = df.merge(aux_df[["Ramal"]], on="Ramal", how="inner")
-
+df = df_filtrado
 salvar()
