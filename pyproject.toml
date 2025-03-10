@@ -1,19 +1,22 @@
 [tool.poetry]
 name = "pipeline-3cx"
 version = "0.1.0"
-description = "Projeto de pipeline de dados para alimentar power bi com informaçẽos gerencias do produto recupera360"
+description = "Projeto de pipeline de dados para alimentar power bi com informações gerenciais do produto Recupera360"
 authors = ["Luiz <lgds.demtrio@gmail.com>"]
 readme = "README.md"
+
+# 📌 Adicione essa linha para informar ao Poetry onde está o código-fonte
+packages = [{include = "src"}]
 
 [tool.poetry.dependencies]
 python = "3.12.4"
 selenium = "^4.27.1"
 pandas = "^2.2.3"
-python-dotenv = "^1.0.1"
 webdriver-manager = "^4.0.2"
 openpyxl = "^3.1.5"
 pipreqs = "^0.5.0"
-
+python-dotenv = "^1.0.1"
+python-dateutil = "^2.9.0.post0"
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.5"

@@ -5,7 +5,7 @@ load_dotenv()
 
 
 def salvar():
-    caminho = "../../data/dataframe.xlsx"
+    caminho = "data/dataframe.xlsx"
     df.to_excel(caminho, index=False)
     print(f"dataframe salvo em: {caminho}")
 
@@ -22,8 +22,8 @@ def criar_coluna_decimal(df, coluna_nova, coluna_antiga):
     return df
 
 
-recent_call_report = r"../../data/call_reports.csv"  # Arquivo de chamadas recentes
-aux_path = r"../../data/assist.xlsx"  # Arquivo auxiliar para transformação
+recent_call_report = r"data/call_reports.csv"  # Arquivo de chamadas recentes
+aux_path = r"data/assist.xlsx"  # Arquivo auxiliar para transformação
 
 df = pd.read_csv(recent_call_report)
 aux_df = pd.read_excel(aux_path)
@@ -47,12 +47,14 @@ df.drop(["Função", "Ramal"], axis=1, inplace=True)
 df = remover_sinal_negativo(df, "Ringing", "Talking")
 df = criar_coluna_decimal(df, "Ringing int", "Ringing")
 df = criar_coluna_decimal(df, "Talking int", "Talking")
+
 salvar()
 
 df_ativa = df.loc[df["Call Type"] == "Ativa"].copy()
-df_ativa.to_csv("../../data/ativa.csv", index=False)
+df_ativa.to_csv("data/ativa.csv", index=False)
+print(f"df_ativa salvo em: data/ativa.csv")
 df_receptiva = df.loc[df["Call Type"] == "Receptiva"].copy()
-df_receptiva.to_csv("../../data/receptiva.csv", index=False)
-
+df_receptiva.to_csv("data/receptiva.csv", index=False)
+print(f"df_receptiva salvo em: data/receptiva.csv")
 
 # df.to_excel("../../data/dataframe.xlsx", index=False)
